@@ -1,11 +1,18 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class GestorPedidos {
-    private Queue<Pedido> pedidos;
+    private static GestorPedidos instance;
+    private final Queue<Pedido> pedidos;
 
-    public GestorPedidos() {
+    private GestorPedidos() {
         pedidos = new LinkedList<>();
+    }
+
+    public static synchronized GestorPedidos getInstance() {
+        if (instance == null) {
+            instance = new GestorPedidos();
+        }
+        return instance;
     }
 
     public void agregarPedido(Pedido p) {
@@ -14,5 +21,9 @@ public class GestorPedidos {
 
     public Pedido procesarPedido() {
         return pedidos.poll();
+    }
+
+    public boolean hayPedidos() {
+        return !pedidos.isEmpty();
     }
 }

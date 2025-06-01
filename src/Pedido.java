@@ -1,8 +1,7 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Pedido {
-    private Queue<String> productos;
+    private final Queue<String> productos;
     private int puntos;
 
     public Pedido() {
@@ -16,7 +15,7 @@ public class Pedido {
     }
 
     public Queue<String> getProductos() {
-        return productos;
+        return new LinkedList<>(productos);
     }
 
     public int getPuntos() {

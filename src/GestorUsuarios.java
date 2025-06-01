@@ -1,18 +1,29 @@
 import java.util.HashMap;
 
 public class GestorUsuarios {
-    private HashMap<String, Usuario> usuarios;
+    private static GestorUsuarios instance;
+    private final HashMap<String, Usuario> usuarios;
 
-    public GestorUsuarios() {
+    private GestorUsuarios() {
         usuarios = new HashMap<>();
+        // Contraseña generada que cumple con los 12 caracteres
+        String contrasenaAdmin = "Adm1nP@ss123"; // 12 caracteres exactos
+        Usuario admin = new Usuario("0", "Admin", "admin@plusultra.com", contrasenaAdmin, true);
+        usuarios.put(admin.getCorreo(), admin);
+    }
+
+    public static synchronized GestorUsuarios getInstance() {
+        if (instance == null) {
+            instance = new GestorUsuarios();
+        }
+        return instance;
     }
 
     public void registrarUsuario(Usuario u) {
+        if (u.getContrasena().length() != 12) {
+            throw new IllegalArgumentException("La contraseña debe tener 12 caracteres");
+        }
         usuarios.put(u.getCorreo(), u);
-    }
-
-    public Usuario buscarPorCorreo(String correo) {
-        return usuarios.get(correo);
     }
 
     public boolean autenticarUsuario(String correo, String contrasena) {
@@ -20,8 +31,11 @@ public class GestorUsuarios {
         return u != null && u.getContrasena().equals(contrasena);
     }
 
-    public String recuperarCodigo(String correo) {
-        Usuario u = usuarios.get(correo);
-        return (u != null) ? u.getCodigoRecuperacion() : null;
+    public Usuario buscarPorCorreo(String correo) {
+        return usuarios.get(correo);
+    }
+
+    public HashMap<String, Usuario> getTodosUsuarios() {
+        return new HashMap<>(usuarios);
     }
 }

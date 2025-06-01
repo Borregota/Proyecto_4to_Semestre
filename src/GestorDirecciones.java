@@ -1,10 +1,18 @@
-import java.util.LinkedList;
+import java.util.*;
 
 public class GestorDirecciones {
-    private LinkedList<Direccion> direcciones;
+    private static GestorDirecciones instance;
+    private final LinkedList<Direccion> direcciones;
 
-    public GestorDirecciones() {
+    private GestorDirecciones() {
         direcciones = new LinkedList<>();
+    }
+
+    public static synchronized GestorDirecciones getInstance() {
+        if (instance == null) {
+            instance = new GestorDirecciones();
+        }
+        return instance;
     }
 
     public void agregarDireccion(Direccion d) {
@@ -16,5 +24,8 @@ public class GestorDirecciones {
             direcciones.set(index, nueva);
         }
     }
-}
 
+    public List<Direccion> getDirecciones() {
+        return new ArrayList<>(direcciones);
+    }
+}

@@ -1,48 +1,51 @@
-// Clase que representa un usuario del sistema
-public class Usuario {
-    // Atributos privados del usuario
-    // Identificador único del usuario
-    private String id;
-    private String nombre;
-    private String correo;
-    private String contrasena;
-    private String codigoRecuperacion;
+import java.util.Random;
 
-    // Constructor que inicializa los datos del usuario y genera automáticamente un código de recuperación
-    public Usuario(String id, String nombre, String correo, String contrasena) {
+public class Usuario {
+    private final String id;
+    private String nombre;
+    private final String correo;
+    private String contrasena;
+    private final String codigoRecuperacion;
+    private boolean esAdmin;
+
+    public Usuario(String id, String nombre, String correo, String contrasena, boolean esAdmin) {
+        if (contrasena == null) {
+            throw new IllegalArgumentException("La contraseña no puede ser nula");
+        }
+        if (contrasena.length() != 12) {
+            throw new IllegalArgumentException(
+                    "La contraseña debe tener exactamente 12 caracteres. Longitud actual: " + contrasena.length());
+        }
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
         this.contrasena = contrasena;
-        this.codigoRecuperacion = generarCodigo(); // Se genera un código aleatorio al crear el usuario
+        this.codigoRecuperacion = generarCodigo();
+        this.esAdmin = esAdmin;
     }
 
-    // Metodo privado que genera un código numérico aleatorio de 6 dígitos como cadena de texto
     private String generarCodigo() {
-        return String.valueOf((int)(Math.random() * 1000000));
+        return String.format("%06d", new Random().nextInt(1000000));
     }
 
-    // Permite actualizar el nombre y correo del usuario
-    public void actualizarDatos(String nombre, String correo) {
-        this.nombre = nombre;
-        this.correo = correo;
+    public boolean verificarCodigoRecuperacion(String codigo) {
+        return this.codigoRecuperacion.equals(codigo);
     }
 
-    // Devuelve el código de recuperación si el correo ingresado coincide con el registrado
-    public String recuperarCodigo(String correoIngresado) {
-        return correoIngresado.equals(this.correo) ? codigoRecuperacion : null;
+    public void cambiarContrasena(String nuevaContrasena) {
+        if (nuevaContrasena.length() != 12) {
+            throw new IllegalArgumentException("La contraseña debe tener 12 caracteres");
+        }
+        this.contrasena = nuevaContrasena;
     }
 
-    // Métodos getter para acceder a algunos atributos privados
-    public String getCorreo() {
-        return correo;
-    }
+    public String getCorreo() { return correo; }
+    public String getContrasena() { return contrasena; }
+    public String getCodigoRecuperacion() { return codigoRecuperacion; }
+    public String getNombre() { return nombre; }
+    public String getId() { return id; }
+    public boolean isAdmin() { return esAdmin; }
 
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public String getCodigoRecuperacion() {
-        return codigoRecuperacion;
-    }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setAdmin(boolean esAdmin) { this.esAdmin = esAdmin; }
 }

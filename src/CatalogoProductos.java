@@ -1,37 +1,43 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-// Clase que representa un catálogo de productos
 public class CatalogoProductos {
-    // Lista que almacena los productos disponibles
-    private List<Producto> productos;
+    private static CatalogoProductos instance;
+    private final List<Producto> productos;
 
-    // Constructor que inicializa el catálogo con productos predefinidos
-    public CatalogoProductos() {
+    private CatalogoProductos() {
         productos = new ArrayList<>();
-        // Agregando productos al catálogo con su nombre, categoría, precio y stock
+        // Productos iniciales
         productos.add(new Producto("FocusMax", "concentracion", 12.5, 20));
-        productos.add(new Producto("EnergyRush", "energía", 10.0, 15));
+        productos.add(new Producto("EnergyRush", "energia", 10.0, 15));
         productos.add(new Producto("SleepEase", "relajacion", 8.75, 10));
         productos.add(new Producto("HydraBoost", "hidratacion", 6.99, 25));
-        productos.add(new Producto("GamerFuel", "energia", 9.5, 30));
-        productos.add(new Producto("NeuroShot", "concentracion", 11.2, 12));
     }
 
-    // Metodo que devuelve una lista de productos que pertenecen a una categoría específica
-    public List<Producto> getProductosPorCategoria(String categoria) {
-        List<Producto> recomendados = new ArrayList<>();
-        // Recorre todos los productos y añade los que coincidan con la categoría (sin importar mayúsculas o minúsculas)
-        for (Producto p : productos) {
-            if (p.getCategoria().equalsIgnoreCase(categoria)) {
-                recomendados.add(p);
-            }
+    public static synchronized CatalogoProductos getInstance() {
+        if (instance == null) {
+            instance = new CatalogoProductos();
         }
-        return recomendados; // Devuelve la lista de productos recomendados
+        return instance;
     }
 
-    // Metodo que devuelve todos los productos del catálogo
-    public List<Producto> getTodos() {
-        return productos;
+    public void agregarProducto(Producto producto) {
+        Objects.requireNonNull(producto, "El producto no puede ser nulo");
+        productos.add(producto);
+    }
+
+    public boolean eliminarProducto(String nombre) {
+        return productos.removeIf(p -> p.getNombre().equalsIgnoreCase(nombre));
+    }
+
+    public List<Producto> getTodosProductos() {
+        return new ArrayList<>(productos);
+    }
+
+    public List<Producto> getProductosPorCategoria(String categoria) {
+        return productos.stream()
+                .filter(p -> p.getCategoria().equalsIgnoreCase(categoria))
+                .toList();
     }
 }

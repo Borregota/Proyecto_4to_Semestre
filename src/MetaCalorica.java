@@ -1,5 +1,5 @@
 public class MetaCalorica {
-    private int caloriasMeta;
+    private final int caloriasMeta;
     private int caloriasConsumidas;
 
     public MetaCalorica(int caloriasMeta) {
@@ -12,7 +12,7 @@ public class MetaCalorica {
     }
 
     public int getRestante() {
-        return caloriasMeta - caloriasConsumidas;
+        return Math.max(0, caloriasMeta - caloriasConsumidas);
     }
 
     public boolean metaSuperada() {

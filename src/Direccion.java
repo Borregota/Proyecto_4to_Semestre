@@ -15,8 +15,12 @@ public class Direccion {
         this.codigoPostal = codigoPostal;
     }
 
+    public String getCalle() { return calle; }
+    public String getCiudad() { return ciudad; }
+    public String getCodigoPostal() { return codigoPostal; }
+
     @Override
     public String toString() {
-        return calle + ", " + ciudad + ", CP: " + codigoPostal;
+        return String.format("%s, %s, CP: %s", calle, ciudad, codigoPostal);
     }
 }
