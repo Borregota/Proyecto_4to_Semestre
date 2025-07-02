@@ -19,20 +19,24 @@ public class GestorUsuarios {
         return instance;
     }
 
-    public void registrarUsuario(Usuario u) {
-        if (u.getContrasena().length() != 12) {
-            throw new IllegalArgumentException("La contraseña debe tener 12 caracteres");
-        }
-        usuarios.put(u.getCorreo(), u);
+    public boolean autenticarUsuario(String correo, String contrasena) {
+        Usuario usuario = usuarios.get(correo);
+        return usuario != null && usuario.getContrasena().equals(contrasena);
     }
 
-    public boolean autenticarUsuario(String correo, String contrasena) {
-        Usuario u = usuarios.get(correo);
-        return u != null && u.getContrasena().equals(contrasena);
+    public void registrarUsuario(Usuario usuario) {
+        usuarios.put(usuario.getCorreo(), usuario);
     }
 
     public Usuario buscarPorCorreo(String correo) {
         return usuarios.get(correo);
+    }
+
+    public Usuario buscarPorId(String id) {
+        return usuarios.values().stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public HashMap<String, Usuario> getTodosUsuarios() {
